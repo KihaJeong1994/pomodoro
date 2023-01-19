@@ -86,12 +86,15 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               alignment: Alignment.bottomCenter,
               child: isRunning
-                  ? Text(
-                      format(totalSeconds),
-                      style: TextStyle(
-                        color: Theme.of(context).cardColor,
-                        fontSize: 89,
-                        fontWeight: FontWeight.w600,
+                  ? Transform.translate(
+                      offset: Offset(0, -30),
+                      child: Text(
+                        format(totalSeconds),
+                        style: TextStyle(
+                          color: Theme.of(context).cardColor,
+                          fontSize: 50,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     )
                   : Row(
@@ -115,6 +118,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 50,
                             fontWeight: FontWeight.w600,
                           ),
+                          textMapper: (numberText) => numberText.length <= 1
+                              ? '0$numberText'
+                              : numberText,
                         ),
                         Text(
                           ':',
@@ -142,6 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 50,
                             fontWeight: FontWeight.w600,
                           ),
+                          textMapper: (numberText) => numberText.length <= 1
+                              ? '0$numberText'
+                              : numberText,
                         ),
                       ],
                     ),
