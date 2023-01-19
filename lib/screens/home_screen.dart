@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           Flexible(
-            flex: 1,
+            flex: 2,
             child: Container(
               alignment: Alignment.bottomCenter,
               child: isRunning
