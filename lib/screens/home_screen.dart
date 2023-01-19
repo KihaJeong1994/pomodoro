@@ -54,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void onStartPressed() {
     setState(() {
       isRunning = true;
-      period = totalSeconds;
     });
     timer = Timer.periodic(
       const Duration(seconds: 1),
@@ -120,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onChanged: (value) => setState(() {
                             minute = value;
                             totalSeconds = 60 * minute + second;
+                            period = totalSeconds;
                           }),
                           textStyle: TextStyle(
                             color: Theme.of(context).cardColor,
@@ -150,6 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onChanged: (value) => setState(() {
                             second = value;
                             totalSeconds = 60 * minute + second;
+                            period = totalSeconds;
                           }),
                           textStyle: TextStyle(
                             color: Theme.of(context).cardColor,
@@ -170,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Flexible(
-            flex: 2,
+            flex: 1,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
