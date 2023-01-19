@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:vibration/vibration.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,9 +20,22 @@ class _HomeScreenState extends State<HomeScreen> {
   int minute = 0;
   int second = 0;
 
-  void onTick(Timer timer) {
+  Future<void> onTick(Timer timer) async {
     if (totalSeconds == 0) {
       timer.cancel();
+      if (await Vibration.hasVibrator() ?? false) {
+        Vibration.vibrate(
+          duration: 3000,
+          pattern: [
+            300,
+            700,
+            300,
+            700,
+            300,
+            700,
+          ],
+        );
+      }
       setState(() {
         totalSeconds = period;
         second = totalSeconds % 60;
