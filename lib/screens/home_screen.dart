@@ -25,14 +25,13 @@ class _HomeScreenState extends State<HomeScreen> {
       timer.cancel();
       if (await Vibration.hasVibrator() ?? false) {
         Vibration.vibrate(
-          duration: 3000,
           pattern: [
-            300,
-            700,
-            300,
-            700,
-            300,
-            700,
+            500,
+            1000,
+            500,
+            1000,
+            500,
+            1000,
           ],
         );
       }
