@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,23 +11,29 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const period = 1500;
-  int totalSeconds = period;
+  int period = 0;
+  int totalSeconds = 0;
   bool isRunning = false;
   int totalPomodoros = 0;
   late Timer timer;
+  int minute = 0;
+  int second = 0;
 
   void onTick(Timer timer) {
     if (totalSeconds == 0) {
       timer.cancel();
       setState(() {
         totalSeconds = period;
+        second = totalSeconds % 60;
+        minute = totalSeconds ~/ 60;
         isRunning = false;
         totalPomodoros++;
       });
     } else {
       setState(() {
         totalSeconds--;
+        second = totalSeconds % 60;
+        minute = totalSeconds ~/ 60;
       });
     }
   }
@@ -34,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void onStartPressed() {
     setState(() {
       isRunning = true;
+      period = totalSeconds;
     });
     timer = Timer.periodic(
       const Duration(seconds: 1),
@@ -51,6 +59,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void onResetPressed() {
     setState(() {
       totalSeconds = period;
+      minute = 0;
+      second = 0;
+    });
+  }
+
+  void onPomodoroResetPressed() {
+    setState(() {
+      totalPomodoros = 0;
     });
   }
 
@@ -69,14 +85,66 @@ class _HomeScreenState extends State<HomeScreen> {
             flex: 1,
             child: Container(
               alignment: Alignment.bottomCenter,
-              child: Text(
-                format(totalSeconds),
-                style: TextStyle(
-                  color: Theme.of(context).cardColor,
-                  fontSize: 89,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              child: isRunning
+                  ? Text(
+                      format(totalSeconds),
+                      style: TextStyle(
+                        color: Theme.of(context).cardColor,
+                        fontSize: 89,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        NumberPicker(
+                          value: minute,
+                          minValue: 0,
+                          maxValue: 100,
+                          onChanged: (value) => setState(() {
+                            minute = value;
+                            totalSeconds = 60 * minute + second;
+                          }),
+                          textStyle: TextStyle(
+                            color: Theme.of(context).cardColor,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          selectedTextStyle: TextStyle(
+                            color: Theme.of(context).cardColor,
+                            fontSize: 50,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          ':',
+                          style: TextStyle(
+                            color: Theme.of(context).cardColor,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        NumberPicker(
+                          value: second,
+                          minValue: 0,
+                          maxValue: 59,
+                          onChanged: (value) => setState(() {
+                            second = value;
+                            totalSeconds = 60 * minute + second;
+                          }),
+                          textStyle: TextStyle(
+                            color: Theme.of(context).cardColor,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          selectedTextStyle: TextStyle(
+                            color: Theme.of(context).cardColor,
+                            fontSize: 50,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ),
           Flexible(
@@ -127,6 +195,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 60,
                             fontWeight: FontWeight.w600,
                           ),
+                        ),
+                        IconButton(
+                          onPressed: onPomodoroResetPressed,
+                          icon: const Icon(Icons.restore_rounded),
                         )
                       ],
                     ),
